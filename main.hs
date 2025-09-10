@@ -8,23 +8,37 @@ triangulo _ = do
     putStrLn""
 -}
 
-base_triangulo :: Int -> Int
-base_triangulo n
+baseTriangulo :: Int -> Int
+baseTriangulo n
     | n <= 0 = 0
     | otherwise = 2 * n - 1
 
-total_triangulo :: Int -> Int
-total_triangulo n
+totalTriangulo :: Int -> Int
+totalTriangulo n
     | n <= 0 = 0
-    | otherwise = base_triangulo n + total_triangulo (n-1)
+    | otherwise = baseTriangulo n + totalTriangulo (n-1)
+
+imprimirUnderline :: Int -> Int -> IO ()
+imprimirUnderline n acc
+    | acc > (baseTriangulo n - acc) `div` 2 = putStr ""
+    | otherwise = do
+        putStr "_"
+        imprimirUnderline n (acc + 1)
+    
+imprimirAsterisco :: Int -> Int -> IO ()
+imprimirAsterisco n acc
+    | acc > (baseTriangulo n - acc) `div` 2 = putStr ""
+    | otherwise = do
+    putStr"*"
+
+--Ey acho que entendi o que eu devo fazer para concerta tudo isso. A lógica que eu devo está buscando é fazer com as minhas funções auxiliares não receba um acc, no lugar disso, a principal vai passar a altura atual que estou trabalhando e vai ter um acc na principal. Assim a main vai ser a função recursiva e não as outras (acho que deve dá certo)
 
 triangulo :: Int -> IO ()
-triangulo _ = do
-    putStr"_"
-    putStr"*"
-    putStr"_"
-    putStrLn""
-    
+triangulo n = do
+    imprimirUnderline n 1
+    imprimirAsterisco n 1
+    imprimirUnderline n 1
+    putStrLn""    
 
 main :: IO()
 main = do
@@ -36,8 +50,8 @@ main = do
     putStrLn "Distância: "
     triangulo altura
 
-    print(base_triangulo altura)
-    print(total_triangulo altura)
+    print(baseTriangulo altura)
+    print(totalTriangulo altura)
 
 clear :: IO ()
 clear = system "cls || clear" >> return ()
